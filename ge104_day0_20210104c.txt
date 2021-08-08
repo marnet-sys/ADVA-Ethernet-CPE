@@ -1,0 +1,94 @@
+# DO NOT EDIT THIS LINE. FILE_TYPE=CONFIGURATION_FILE VERSION=11.6.1
+
+#
+#CLI:MANAGEMENT TUNNEL-1  Delete
+#
+home
+configure communication
+  delete mgmttnl mgmt_tnl-1
+
+#
+#CLI:SYSTEM  Edit
+#
+home
+configure system
+  http disabled
+  https disabled
+  tftp enabled
+  ftp disabled
+  telnet disabled
+  netconf-over-ssh disabled
+#
+#CLI:SECURITY SYSTEM  Edit
+#
+home
+configure user-security
+  config-ssl-strength high
+  config-user root password ChgMeNOW ********** **********
+  config-user netadmin password ********** **********
+  config-user user password ********** **********
+#
+#CLI:SNMP COMMUNITY ENTRY  Delete
+#
+home
+configure snmp
+  delete community "private"
+  delete community "public"
+#
+#CLI:NETWORK PORT-1-1-1-2  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure network-port network-1-1-1-2
+      admin-state in-service
+      media auto
+      mdix auto
+
+#
+#CLI:LAG-1-1 Create
+#
+home
+network-element ne-1
+  add lag lag-1-1 active-standby
+  configure lag lag-1-1
+    lacp-control enabled
+    lag-protocols enabled
+    add member-port network-1-1-1-1
+#
+#CLI:MANAGEMENT TUNNEL-1 Create
+#
+home
+configure communication
+  add mgmttunnel 1 "lagmgmt" lag-1-1 ethernet vlan-based ipv4-only enabled 127 disabled 256000 768000 enabled enabled system-name
+    configure mgmttnl mgmt_tnl-1
+      dhcp-client-id-type system-name
+      dhcp-client-id-control disabled
+      dhcp-control enabled
+#
+#CLI:MANAGEMENT TUNNEL-2 Create
+#
+home
+configure communication
+  add mgmttunnel 2 "netmgmt" network-1-1-1-2 ethernet vlan-based ipv4-only enabled 127 disabled 256000 768000 enabled enabled system-name
+  configure mgmttnl mgmt_tnl-2
+    dhcp-client-id-type system-name
+    dhcp-client-id-control disabled
+    dhcp-control enabled
+#
+#CLI:DCN-1-1-1-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure dcn
+      admin-state unassigned
+#
+#CLI:SYSTEM  Edit
+#
+home
+configure system
+  serial disabled
+#end
+home
+admin config-file

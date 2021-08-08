@@ -1,0 +1,296 @@
+# DO NOT EDIT THIS LINE. FILE_TYPE=CONFIGURATION_FILE VERSION=11.6.1
+
+#
+# Day 1 configuration file Acceptance 2021 April 6a
+#
+
+#
+#CLI:SYSTEM  Edit
+#
+home
+configure system
+  telnet enabled
+  time-zone
+    utc-offset +01:00
+    dst-control enabled
+    dst-start-month march
+    dst-start-day LASTSUNDAY
+    dst-start-time 02:00
+    dst-end-month october
+    dst-end-day LASTSUNDAY
+    dst-end-time 03:00
+    back
+  ntp-client
+    primary-server ipv4 10.117.128.7
+    backup-server ipv4 10.117.128.23
+    control enabled
+    polling-interval 16
+	back
+  syslog-facility-code 19
+  syslog-server 1
+    configure ipv4-address 10.117.142.11 514
+    back
+  syslog-server 2
+    configure ipv4-address 10.37.7.2 514
+    back
+  syslog-server 3
+    configure ipv4-address 10.37.7.130 514
+    back
+  audit-log
+    syslog-control enabled
+    back
+  security-log
+    syslog-control enabled
+    back
+  alarm-log
+    syslog-control enabled
+	back
+  acl-entry acl-1
+    configure permit ipv4 10.37.7.0 255.255.255.224
+    control enabled
+    back
+  acl-entry acl-2
+    configure permit ipv4 10.37.7.128 255.255.255.224
+    control enabled
+    back
+  acl-entry acl-3
+    configure permit ipv4 10.117.140.224 255.255.255.224
+    control enabled
+    back
+  acl-entry acl-4
+    configure permit ipv4 10.117.224.224 255.255.255.224
+    control enabled
+    back
+  acl-entry acl-5
+    configure permit ipv4 10.23.2.32 255.255.255.240
+    control enabled
+    back
+  acl-entry acl-6
+    configure permit ipv4 10.117.221.112 255.255.255.240
+    control enabled
+    back
+  acl-entry acl-7
+    configure permit ipv4 10.117.209.64 255.255.255.224
+    control enabled
+	back
+  acl-entry acl-8
+    configure permit ipv4 10.79.64.170 255.255.255.255
+    control enabled
+	back
+  acl-entry acl-9
+    configure permit ipv4 10.79.193.42 255.255.255.255
+    control enabled
+    back
+  acl-entry acl-10
+    configure permit ipv4 10.117.142.0 255.255.255.128
+    control enabled
+    back 
+  acl-entry acl-11
+    configure permit ipv4 10.117.128.0 255.255.255.192
+    control enabled
+	back
+
+#
+#CLI:SECURITY SYSTEM  Edit
+#
+home
+configure user-security
+  auth-protocol tacacs
+  tacacs-privilege-control enabled
+  accounting enabled
+  access-order remote
+  auth-type pap
+  config-ssl-strength high
+  security-trap-type all
+  config-rap 1
+    ip-address 10.79.64.170
+    port 49
+    accounting-port 49
+	secret Edincpe!bdmz
+    control enabled
+    back
+  config-rap 2
+    ip-address 10.79.193.42
+    port 49
+    accounting-port 49
+	secret Edincpe!bdmz
+    control enabled
+    back
+  config-rap 3
+    port 49
+    accounting-port 49
+
+#
+#CLI:SNMP COMMUNITY ENTRY  Create
+#
+home
+configure snmp
+  add community "M2RUSMWWP" readonly
+  add usm-user polling local polling readonly auth-priv sha1 aes AvCKOjAPPM*jC5SyFwu% AvCKOjAPPM*jC5SyFwu% cTjv%VseS6zcrIAjJJe#OQOBI cTjv%VseS6zcrIAjJJe#OQOBI
+  delete usm-user MONITOR local
+  delete usm-user OPERATOR local
+  delete usm-user PROVISION local
+  delete usm-user ADMIN local
+
+#
+#CLI:TRAFFIC GEN-1  Edit
+#
+home
+network-element ne-1
+  configure tm-params bwp-mode information-rate
+
+#
+#CLI:LLDP ACC PORT CONFIG-1-1-1-3-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure access-port access-1-1-1-3
+      cpd-filter pagp discard 
+      cpd-filter udld discard
+      cpd-filter bpdu pass-thru
+      cpd-filter pause discard
+      cpd-filter lacp discard
+      cpd-filter lacp-marker discard
+      cpd-filter port-authen discard 
+      cpd-filter elmi discard
+      cpd-filter nearest-lldp discard
+      cpd-filter non-tpmr-lldp discard
+      cpd-filter customer-lldp discard
+      mtu 9004
+      lldp
+        configure acc-port-config 1
+          admin-status disabled
+
+#
+#CLI:LLDP ACC PORT CONFIG-1-1-1-4-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure access-port access-1-1-1-4
+      cpd-filter pagp discard 
+      cpd-filter udld discard
+      cpd-filter bpdu pass-thru
+      cpd-filter pause discard
+      cpd-filter lacp discard
+      cpd-filter lacp-marker discard
+      cpd-filter port-authen discard 
+      cpd-filter elmi discard
+      cpd-filter nearest-lldp discard
+      cpd-filter non-tpmr-lldp discard
+      cpd-filter customer-lldp discard
+      mtu 9004
+      lldp
+        configure acc-port-config 1
+          admin-status disabled
+
+#
+#CLI:LLDP ACC PORT CONFIG-1-1-1-5-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure access-port access-1-1-1-5
+      cpd-filter pagp discard 
+      cpd-filter udld discard
+      cpd-filter bpdu pass-thru
+      cpd-filter pause discard
+      cpd-filter lacp discard
+      cpd-filter lacp-marker discard
+      cpd-filter port-authen discard 
+      cpd-filter elmi discard
+      cpd-filter nearest-lldp discard
+      cpd-filter non-tpmr-lldp discard
+      cpd-filter customer-lldp discard
+      mtu 9004
+      lldp
+        configure acc-port-config 1
+          admin-status disabled
+
+#
+#CLI:LLDP ACC PORT CONFIG-1-1-1-6-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure access-port access-1-1-1-6
+      cpd-filter pagp discard 
+      cpd-filter udld discard
+      cpd-filter bpdu pass-thru
+      cpd-filter pause discard
+      cpd-filter lacp discard
+      cpd-filter lacp-marker discard
+      cpd-filter port-authen discard 
+      cpd-filter elmi discard
+      cpd-filter nearest-lldp discard
+      cpd-filter non-tpmr-lldp discard
+      cpd-filter customer-lldp discard
+      mtu 9004
+        lldp
+          configure acc-port-config 1
+            admin-status disabled
+
+#
+#CLI:LLDP NET PORT CONFIG-1-1-1-1-1  Edit
+#
+home
+network-element ne-1
+  configure lag lag-1-1
+    cpd-filter pagp discard 
+    cpd-filter udld discard
+    cpd-filter bpdu pass-thru
+    cpd-filter elmi discard
+    cpd-filter nearest-lldp discard
+    cpd-filter non-tpmr-lldp discard
+    cpd-filter customer-lldp discard
+    mtu 9008
+
+#
+#CLI:LLDP NET PORT CONFIG-1-1-1-2-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure network-port network-1-1-1-1
+      lldp
+        configure net-port-config 1
+          admin-status disabled
+#
+#CLI:LLDP NET PORT CONFIG-1-1-1-2-1  Edit
+#
+home
+network-element ne-1
+  configure nte nte104-1-1-1
+    configure network-port network-1-1-1-2
+    cpd-filter pagp discard 
+    cpd-filter udld discard
+    cpd-filter bpdu pass-thru
+    cpd-filter elmi discard
+    cpd-filter nearest-lldp discard
+    cpd-filter non-tpmr-lldp discard
+    cpd-filter customer-lldp discard
+    mtu 9004
+      lldp
+        configure net-port-config 1
+          admin-status disabled
+  
+#
+#CLI:MANAGEMENT TUNNEL-1 Edit
+#
+home
+configure communication
+  configure mgmttnl mgmt_tnl-1
+    dhcp-client-id-control enabled
+
+#
+#CLI:MANAGEMENT TUNNEL-2 Edit
+#
+home
+configure communication
+  configure mgmttnl mgmt_tnl-2
+    dhcp-client-id-control enabled
+
+#end
+home
+admin config-file
